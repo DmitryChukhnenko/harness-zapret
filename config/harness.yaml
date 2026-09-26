@@ -1,6 +1,7 @@
 measurement:
   min_distinct_addresses: 2
   attempts_per_domain: 2
+  recheck_max_age_seconds: 3600
 gates:
   min_runs: 2
   min_dates: 2

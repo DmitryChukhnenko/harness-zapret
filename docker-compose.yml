@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: zapret/Dockerfile
     cap_drop: [ALL]
-    cap_add: [NET_ADMIN, NET_RAW, SETUID, SETGID]
+    cap_add: [NET_ADMIN, NET_RAW, NET_BIND_SERVICE, SETUID, SETGID]
+    dns: [127.0.0.1]
     sysctls:
       net.ipv4.ip_forward: "1"
     volumes:
@@ -24,6 +25,7 @@ services:
       retries: 3
     restart: unless-stopped
   client:
+    dns: [172.31.0.2]
     build:
       context: .
       dockerfile: client/Dockerfile

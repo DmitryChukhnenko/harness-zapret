@@ -3,6 +3,7 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
+from harness.models import Fact
 from harness.parser import parse_events
 from harness.storage import Storage, write_json
 
@@ -38,7 +39,12 @@ def ingest(root, run_id=None, rebuild=False, since=None):
     store = Storage(root)
     paths = sorted((store.root / "raw").glob("*.events.jsonl"))
     if run_id is not None:
-        paths = [store.root / "raw" / f"{uuid.UUID(run_id)}.events.jsonl"]
+        run_id = str(uuid.UUID(run_id))
+        event_path = store.root / "raw" / f"{run_id}.events.jsonl"
+        recheck_path = store.root / "raw" / f"{run_id}.recheck.jsonl"
+        if not event_path.exists() and not recheck_path.exists():
+            raise FileNotFoundError("run has no raw archive")
+        paths = [event_path] if event_path.exists() else []
     facts, tail = [], 0
     for path in paths:
         label = path.name.removesuffix(".events.jsonl")
@@ -47,6 +53,11 @@ def ingest(root, run_id=None, rebuild=False, since=None):
         tail += parsed.discarded_tail
     if rebuild and since is not None:
         raise ValueError("cannot combine full rebuild and incremental boundary")
+    for path in sorted((store.root / "raw").glob("*.recheck.jsonl")):
+        if run_id is not None and path.name != f"{run_id}.recheck.jsonl":
+            continue
+        rechecks = [Fact.model_validate_json(line) for line in path.read_text().splitlines()]
+        facts.extend(f for f in rechecks if since is None or f.timestamp > since)
     count = store.ingest(facts, rebuild=rebuild)
     result = {"inserted": count, "discarded_tail": tail, "run_id": run_id}
     write_json(store.root / "state" / "ingestion.json", result)

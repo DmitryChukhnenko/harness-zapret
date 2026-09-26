@@ -10,6 +10,9 @@ from pathlib import Path
 
 def instrument(text: str) -> str:
     replacements = {
+        'BLOCKCHECK2D="$ZAPRET_BASE/blockcheck2.d"': (
+            'BLOCKCHECK2D="${BLOCKCHECK2D:-$ZAPRET_BASE/blockcheck2.d}"'
+        ),
         "\tlocal code=0 n=0 p pids\n": (
             "\tlocal code=0 n=0 p pids probe_rc\n"
             '\tpython -m harness.trace begin "$2" "$1" "$IPV" '

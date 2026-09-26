@@ -1,5 +1,6 @@
 import json
 
+import pytest
 from harness.llm import MockProvider
 from harness.llm_tasks import (
     AnnotationInput,
@@ -58,3 +59,28 @@ def test_grid_hallucinations_and_duplicates_rejected():
     assert result.status == "ok" and proposals == ["--lua-desync=multisplit:pos=2"]
     assert expand_grid(data, MockProvider([text]), proposals)[0].status == "invalid_grid_proposal"
     assert expand_grid(data, MockProvider([text.replace("multisplit", "invented")]), [])[1] == []
+
+
+@pytest.mark.parametrize("lane", ["annotation", "patch", "grid"])
+def test_other_lanes_malformed_then_abstain(lane):
+    if lane == "annotation":
+        data = AnnotationInput(probe_count=1, clean_wins=0, missing_rechecks=0, invariants=[])
+        response = '{"abstain":true,"anomalies":[],"budget_advice":[],"next_targets":[]}'
+
+        def call(provider):
+            return annotate(data, provider)
+    elif lane == "patch":
+        data = PatchInput(symptom="unknown", source="x = 1", check_results=["UNKNOWN"])
+        response = '{"abstain":true,"replacements":[],"reason":"insufficient evidence"}'
+
+        def call(provider):
+            return draft_patch(data, provider)
+    else:
+        data = GridInput(corpus_operations=["--payload"], measured_count=1)
+        response = '{"abstain":true,"proposals":[]}'
+
+        def call(provider):
+            return expand_grid(data, provider, [])[0]
+
+    assert call(MockProvider(["malformed", response])).response.abstain
+    assert call(MockProvider(["malformed", "malformed"])).status == "invalid_response"

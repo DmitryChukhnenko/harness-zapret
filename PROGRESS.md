@@ -4,7 +4,7 @@
 Phases 0–1 committed; Compose config and upstream instrumentation validated.
 
 ## Current phase
-Phases 5–11 implemented; integration hardening and acceptance/finalization next.
+Phase 12 acceptance implemented; phase 13 documentation and final review in progress.
 
 ## Completed
 - Read the attached implementation brief and authoritative SPEC.md.
@@ -31,11 +31,17 @@ Phases 5–11 implemented; integration hardening and acceptance/finalization nex
 - Gateway-local deployment transaction, service validation, backup/rollback and watchdog thread.
 - CLI stages, UTC sweep window, fresh ingestion before LLM, reports and reconciliation.
 - 51 tests pass, including deployment refusal and immediate rollback branches; ruff passes.
+- Acceptance command emits JSON/Markdown/JUnit evidence for all П-1…П-12.
+- Shared gateway DNS, explicit transit packet counter probe and bounded night window.
+- Run calendar date preserved across midnight; rebuild includes recheck archives.
+- Fresh node-side gates evaluated under the deployment lock; expiring recheck evidence.
+- Budget module filtering wired to blockcheck; re-enabled modules reset their observation sample.
+- Installed CLI verified; 62 tests pass and live topology test skips without enabled lab.
+- Real Mistral evaluation is a separate explicit `harness llm-eval --live` command.
 
 ## Remaining
-- Phase 12: acceptance case mapping and reports, live checks with honest environment skips.
-- Phase 13: operational hardening, README, requirements traceability and final verification.
-- Verify shared DNS and transit topology; strengthen interrupted-run and recheck rebuild handling.
+- Complete README, requirements mapping, live-verification guide and final verification.
+- Real Docker build and networking verification remain environment-dependent.
 
 ## Known issues
 - Docker Desktop Linux daemon unavailable, including outside the sandbox.

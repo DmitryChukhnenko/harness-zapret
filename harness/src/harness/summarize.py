@@ -4,7 +4,7 @@ from harness.clean_win import clean_win
 from harness.llm import Candidate, InvariantView, SelectionSummary
 
 
-def summarize(run_id, facts, gates, invariants):
+def summarize(run_id, facts, gates, invariants, min_addresses=2):
     current = [f for f in facts if f.run_id == run_id]
     eligible = [gate for gate in gates if gate.eligible]
     view = SelectionSummary(
@@ -25,7 +25,7 @@ def summarize(run_id, facts, gates, invariants):
         "schema_version": 1,
         "run_id": run_id,
         "fact_count": len(current),
-        "clean_wins": sum(clean_win(f)[0] for f in current),
+        "clean_wins": sum(clean_win(f, min_addresses)[0] for f in current),
         "missing_addresses": missing_addresses,
         "warnings": ["No addresses recorded: clean wins structurally zero for these probes"]
         if missing_addresses

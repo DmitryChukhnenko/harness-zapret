@@ -35,6 +35,9 @@ def parse_events(text: str, run_id: str) -> ParseResult:
                 strategy=strategy,
                 source=source,
                 timestamp=datetime.fromisoformat(event["timestamp"]),
+                run_timestamp=datetime.fromisoformat(event["run_timestamp"])
+                if event.get("run_timestamp")
+                else None,
                 addresses=[],
                 attempts=[],
             )

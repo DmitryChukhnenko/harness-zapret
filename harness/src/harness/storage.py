@@ -1,4 +1,5 @@
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -56,8 +57,15 @@ class Storage:
 
 
 def write_json(path, value):
+    write_text(path, json.dumps(value, ensure_ascii=False, indent=2, default=str))
+
+
+def write_text(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(path.suffix + ".tmp")
-    temp.write_text(json.dumps(value, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    with temp.open("w", encoding="utf-8") as stream:
+        stream.write(value)
+        stream.flush()
+        os.fsync(stream.fileno())
     temp.replace(path)

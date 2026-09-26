@@ -33,6 +33,40 @@ def health(point):
 
 
 def dispatch(point, verb, payload):
+    if point == "gateway" and verb == "path_probe":
+        StrictModel.model_validate(payload)
+        from harness.config import load_config, load_domains
+        from harness.node_runtime import client_control
+        from harness.probe import ProbeRequest, remote_probe
+
+        def packets():
+            output = command(
+                ["nft", "-j", "list", "counter", "inet", "harness_path", "client_forward"]
+            )
+            if output.returncode:
+                raise ValueError("forwarding counter unavailable")
+            return next(
+                row["counter"]["packets"]
+                for row in json.loads(output.stdout)["nftables"]
+                if "counter" in row
+            )
+
+        before = packets()
+        config = load_config()
+        outcome = remote_probe(
+            client_control(),
+            ProbeRequest(
+                domain=load_domains().all()[0],
+                attempts=config.measurement.attempts_per_domain,
+                timeout=config.timeouts.exit_probe_seconds,
+            ),
+        )
+        delta = packets() - before
+        return {
+            "status": "PASS" if delta > 0 and outcome["verdict"] != "UNMEASURED" else "UNKNOWN",
+            "forwarded_packets": delta,
+            "probe_verdict": outcome["verdict"],
+        }
     if point == "gateway" and verb in {"apply_strategy", "recheck"}:
         from harness.node_runtime import apply, recheck
 

@@ -85,7 +85,7 @@ def analyze(config, run_id):
         min_addresses=config.measurement.min_distinct_addresses,
     )
     gates = evaluate_gates(facts, load_domains(), config)
-    summary = summarize(run_id, facts, gates, invariants)
+    summary = summarize(run_id, facts, gates, invariants, config.measurement.min_distinct_addresses)
     summary["topology_scope"] = "Docker lab has one bypass branch and no tunnel branch"
     write_json(store.root / "summaries" / f"{run_id}.json", summary)
     write_json(store.root / "summaries" / "summary.json", summary["llm_input"])
@@ -174,10 +174,12 @@ def pipeline(config, existing_run=None):
     run_id = existing_run or run_sweep(config)
     try:
         summary = analyze(config, run_id)
+        rechecks = recheck(config, run_id)
         decision = llm(config, run_id)
         payload = {
             "timestamp": datetime.now(UTC).isoformat(),
             "summary": summary,
+            "rechecks": rechecks,
             "llm": decision,
             "deployment": "NOT_REQUESTED",
             "watchdog": "NOT_REQUESTED",

@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 
 from harness.locking import lock
-from harness.storage import write_json
+from harness.storage import write_json, write_text
 from harness.strategy import validate_strategy
 from harness.watchdog import make_state, tick
 
@@ -30,16 +30,15 @@ class Deployment:
         return json.loads(path.read_text()) if path.exists() else {"status": "idle"}
 
     def write_strategy(self, strategy):
-        path = self.root / "strategy.conf"
-        temp = path.with_suffix(".tmp")
-        temp.write_text(strategy + "\n")
-        temp.replace(path)
+        write_text(self.root / "strategy.conf", strategy + "\n")
 
     def apply(self, strategy, *, eligible, now=None):
         validate_strategy(strategy)  # Validate before locks and state mutations.
-        if not eligible:
+        if not callable(eligible) and not eligible:
             raise ValueError("candidate did not pass deterministic gates")
         with lock(self.root / "operation.lock"):
+            if callable(eligible) and not eligible():
+                raise ValueError("candidate did not pass fresh deterministic gates")
             if not self.scheduled():
                 raise ValueError("local watchdog is not scheduled")
             if strategy == self.read():
@@ -49,7 +48,7 @@ class Deployment:
             baselines = self.measure()  # Includes all configured branches and both points.
             old = self.read()
             state = make_state(old, strategy, baselines, now or time.time(), self.config)
-            (self.root / "backup.conf").write_text(old + "\n")
+            write_text(self.root / "backup.conf", old + "\n")
             state["status"] = "prepared"
             write_json(self.root / "deployment.json", state)
             self.write_strategy(strategy)

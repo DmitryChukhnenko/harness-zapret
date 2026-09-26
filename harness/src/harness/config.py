@@ -14,6 +14,7 @@ class StrictModel(BaseModel):
 class Measurement(StrictModel):
     min_distinct_addresses: int = Field(default=2, ge=2)
     attempts_per_domain: int = Field(default=2, ge=2, le=20)
+    recheck_max_age_seconds: int = Field(default=3600, ge=1)
 
 
 class Gates(StrictModel):

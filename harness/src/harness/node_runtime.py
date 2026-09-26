@@ -71,6 +71,10 @@ class ApplyRequest(RunRef):
 def apply(payload):
     request = ApplyRequest.model_validate(payload)
     validate_strategy(request.strategy)
+    return engine().apply(request.strategy, eligible=lambda: is_eligible(request))
+
+
+def is_eligible(request):
     facts = archive_facts()
     gates = evaluate_gates(facts, load_domains(), load_config())
     eligible = any(
@@ -90,8 +94,16 @@ def apply(payload):
                 and f.domain == domain
                 and f.measurement_point == point
             ]
-            eligible = eligible and bool(matching) and all(f.verdict == "OPEN" for f in matching)
-    return engine().apply(request.strategy, eligible=eligible)
+            max_age = load_config().measurement.recheck_max_age_seconds
+            eligible = (
+                eligible
+                and bool(matching)
+                and all(
+                    f.verdict == "OPEN" and 0 <= time.time() - f.timestamp.timestamp() <= max_age
+                    for f in matching
+                )
+            )
+    return eligible
 
 
 def recover_expired(force=False):
@@ -141,6 +153,10 @@ def background():
 
 
 def startup():
+    for path in (ROOT / "runs").glob("*/status.json"):
+        state = json.loads(path.read_text())
+        if state["status"] in {"running", "starting"}:
+            write_json(path, state | {"status": "failed", "reason": "node_restarted"})
     recover_expired(force=True)
     deploy = engine()
     if deploy.state()["status"] in {"prepared", "observing", "rollback_required"}:
@@ -184,6 +200,9 @@ def recheck_worker(request):
                         request.run_id, strategy, domains, client_control(), config, len(facts)
                     )
                     facts.extend(measured)
+                    (directory / "recheck.jsonl").write_text(
+                        "".join(fact_json(f) + "\n" for f in facts)
+                    )
                     returned.append(strategy)
                 finally:
                     recover_expired(force=True)

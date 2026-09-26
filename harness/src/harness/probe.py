@@ -67,7 +67,11 @@ def probe(request, execute=subprocess.run):
             if body.get("remote_ip"):
                 addresses.append(str(ip_address(body["remote_ip"])))
             code = body.get("http_code", 0)
-            if request.address and code == 421:
+            wrong_name = (
+                response.returncode == 60
+                and "no alternative certificate subject name matches" in body.get("errormsg", "")
+            )
+            if request.address and (code == 421 or wrong_name):
                 outcome = "ADDRESS_NOT_SERVING_HOST"
             elif response.returncode == 0 and 200 <= code < 400:
                 outcome = "OPEN"

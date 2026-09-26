@@ -15,7 +15,7 @@ def evaluate_gates(facts, domains, config):
             wins = [f for f in probes if clean_win(f, config.measurement.min_distinct_addresses)[0]]
             covered = sorted({f.domain for f in wins})
             runs = {f.run_id for f in wins}
-            dates = {f.timestamp.date() for f in wins}
+            dates = {(f.run_timestamp or f.timestamp).date() for f in wins}
             reasons = []
             if not wins:
                 reasons.append("no_clean_win")

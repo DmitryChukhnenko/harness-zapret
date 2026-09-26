@@ -33,6 +33,12 @@ def doctor(config):
     checks["topology"] = (
         "PASS" if len(routes) == 1 and routes[0].get("gateway") == "172.31.0.2" else "UNKNOWN"
     )
+    if checks["topology"] == "PASS":
+        try:
+            checks["path_probe"] = Control(timeout=30).call("path_probe")
+            checks["topology"] = checks["path_probe"]["status"]
+        except Exception:
+            checks["topology"] = "UNKNOWN"
     return checks
 
 
@@ -56,6 +62,7 @@ def main():
             "report",
             "acceptance",
             "pipeline",
+            "llm-eval",
         ],
     )
     parser.add_argument("--config", default="config/harness.yaml")
@@ -63,6 +70,7 @@ def main():
     parser.add_argument("--rebuild", action="store_true")
     parser.add_argument("--since", help="timezone-aware ISO timestamp")
     parser.add_argument("--provider", choices=["mistral", "mock"])
+    parser.add_argument("--live", action="store_true", help="explicit paid API evaluation")
     parser.add_argument(
         "--initialize", action="store_true", help="initialize expected config snapshot"
     )
@@ -76,6 +84,15 @@ def main():
         command = args.command
         if command == "doctor":
             result = doctor(config)
+        elif command == "llm-eval":
+            if args.live:
+                from harness.evaluation import live_evaluation
+
+                result = live_evaluation(config)
+            else:
+                from harness.acceptance import acceptance
+
+                result = acceptance(config.data_dir)
         elif command in {"sweep", "run"}:
             result = {"run_id": stages.run_sweep(config)}
         elif command == "ingest":

@@ -72,6 +72,8 @@ class MistralProvider:
             content = choice["message"]["content"]
             if not isinstance(content, str):
                 raise ProviderError("Mistral completion has unsupported content")
+            if len(content.encode("utf-8")) > 65536:
+                raise ProviderError("Mistral completion exceeds response size limit")
             usage = {
                 name: value
                 for name, value in (data.get("usage") or {}).items()

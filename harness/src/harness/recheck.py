@@ -10,6 +10,7 @@ def missing_rechecks(sent, returned):
 
 def measure_candidate(run_id, strategy, domains, client, config, start_sequence=0):
     facts = []
+    run_timestamp = datetime.now(UTC)
     for domain in domains:
         try:
             addresses = resolve(domain, 4)
@@ -39,6 +40,7 @@ def measure_candidate(run_id, strategy, domains, client, config, start_sequence=
                 Fact(
                     run_id=run_id,
                     timestamp=datetime.now(UTC),
+                    run_timestamp=run_timestamp,
                     sequence=start_sequence + len(facts),
                     record_type="probe",
                     domain=domain,

@@ -4,6 +4,7 @@ import signal
 import subprocess
 import threading
 import uuid
+from datetime import UTC, datetime
 from pathlib import Path
 
 from pydantic import Field, field_validator
@@ -51,14 +52,23 @@ def run(request):
         "ENABLE_HTTPS_TLS13": "0",
         "ENABLE_HTTP3": "0",
         "HARNESS_EVENTS": str(directory / "events.jsonl"),
+        "HARNESS_RUN_TIMESTAMP": datetime.now(UTC).isoformat(),
         "CURL_MAX_TIME": str(config.timeouts.exit_probe_seconds),
     }
     # Serialize with deployment/recheck. Invalid arguments have already been rejected.
     try:
         with lock("/state/operation.lock"):
+            from harness.node_budget import prepare_modules
             from harness.node_service import live_strategy
+            from harness.pipeline import remaining_window
 
-            if live_strategy():
+            remaining = remaining_window(config)
+            if not remaining:
+                raise ValueError("outside configured sweep window")
+            env["BLOCKCHECK2D"] = str(prepare_modules(config))
+
+            existing = subprocess.run(["pgrep", "-x", "nfqws2"], capture_output=True, check=False)
+            if live_strategy() or existing.returncode == 0:
                 raise ValueError(
                     "sweep requires bypass disabled; use selective recheck when active"
                 )
@@ -73,7 +83,7 @@ def run(request):
                     cwd="/opt/zapret2",
                 )
                 try:
-                    code = proc.wait(timeout=request.duration)
+                    code = proc.wait(timeout=min(request.duration, remaining))
                     status = "completed" if code == 0 else "failed"
                 except subprocess.TimeoutExpired:
                     os.killpg(proc.pid, signal.SIGTERM)

@@ -13,6 +13,7 @@ Verdict = Literal["OPEN", "BLOCKED_OR_FAILED", "ADDRESS_NOT_SERVING_HOST", "UNME
 class Fact(StrictModel):
     run_id: str
     timestamp: datetime
+    run_timestamp: datetime | None = None
     sequence: int = Field(ge=0)
     record_type: Literal["probe", "baseline", "foreign"]
     domain: str
@@ -35,6 +36,8 @@ class Fact(StrictModel):
     def consistent(self):
         if self.timestamp.tzinfo is None:
             raise ValueError("timestamp must include timezone")
+        if self.run_timestamp is not None and self.run_timestamp.tzinfo is None:
+            raise ValueError("run timestamp must include timezone")
         if self.success_count > self.attempt_count:
             raise ValueError("successes exceed attempts")
         for address in self.frontend_addresses:

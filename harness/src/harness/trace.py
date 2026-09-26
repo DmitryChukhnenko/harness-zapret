@@ -18,7 +18,12 @@ def main():
         with Path(path).open("a", encoding="utf-8") as stream:
             stream.write(
                 json.dumps(
-                    {"event": operation, "args": args, "timestamp": datetime.now(UTC).isoformat()}
+                    {
+                        "event": operation,
+                        "args": args,
+                        "timestamp": datetime.now(UTC).isoformat(),
+                        "run_timestamp": os.environ.get("HARNESS_RUN_TIMESTAMP"),
+                    }
                 )
                 + "\n"
             )

@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git build-essen
 RUN git init /opt/zapret2 && cd /opt/zapret2 && git remote add origin https://github.com/bol-van/zapret2.git && git fetch --depth 1 origin "$ZAPRET_REV" && git checkout --detach FETCH_HEAD && test "$(git rev-parse HEAD)" = "$ZAPRET_REV" && make && printf '%s\n' "$ZAPRET_REV" > REVISION
 
 FROM python:3.12-slim-bookworm
-RUN apt-get update && apt-get install -y --no-install-recommends curl iproute2 nftables iptables ipset dnsutils iputils-ping netcat-openbsd libnetfilter-queue1 libmnl0 libluajit-5.1-2 procps && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends curl iproute2 nftables iptables ipset dnsutils dnsmasq-base iputils-ping netcat-openbsd libnetfilter-queue1 libmnl0 libluajit-5.1-2 procps && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /opt/zapret2 /opt/zapret2
 WORKDIR /app
 COPY pyproject.toml README.md ./
