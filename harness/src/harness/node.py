@@ -33,6 +33,16 @@ def health(point):
 
 
 def dispatch(point, verb, payload):
+    if verb == "probe":
+        from harness.probe import ProbeRequest, probe
+
+        request = ProbeRequest.model_validate(payload)
+        return probe(request)
+    if point == "gateway" and verb == "client_health":
+        StrictModel.model_validate(payload)
+        from harness.control import Control
+
+        return Control(endpoint="http://172.31.0.3:8080").call("health")
     if point == "gateway" and verb in {"run_blockcheck", "run_status", "run_result"}:
         from harness.node_runs import dispatch as dispatch_run
 

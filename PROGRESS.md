@@ -4,7 +4,7 @@
 Phases 0–1 committed; Compose config and upstream instrumentation validated.
 
 ## Current phase
-Phases 2–4 — raw run transport, typed facts, SQLite ingestion and gates implemented.
+Phases 5–8 in progress: probes and Mistral provider implemented; recheck and summaries next.
 
 ## Completed
 - Read the attached implementation brief and authoritative SPEC.md.
@@ -19,6 +19,12 @@ Phases 2–4 — raw run transport, typed facts, SQLite ingestion and gates impl
 - SQLite idempotency key (run_id, timestamp, sequence), conflict detection and JSONL export.
 - Single clean-win definition, class gates with distinct run/date conditions.
 - 11 unit tests pass; ruff passes. Docker build attempted: daemon unavailable.
+- Gateway/client probes preserve Host/SNI for destination IP overrides; offline is UNMEASURED.
+- Corpus-derived strategy operation validation and deployment safety checks.
+- Provider protocol, MockProvider and official Mistral chat completions JSON Schema requests.
+- Index-only selection, abstain, one schema retry, local validation, usage accounting.
+- LLM credentials only MISTRAL_API_KEY; no configurable endpoint or credential field.
+- 40 offline tests pass, including 20 Mistral/schema/error-path cases.
 
 ## Remaining
 - Phases 5–13: client probes, recheck, invariants, LLM, deployment, watchdog,

@@ -5,6 +5,7 @@ from pathlib import Path
 import httpx
 
 ALLOWED = {
+    "client_health",
     "health",
     "probe",
     "run_blockcheck",
