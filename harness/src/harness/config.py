@@ -52,6 +52,11 @@ class LLMConfig(StrictModel):
     max_summary_bytes: int = Field(default=16384, ge=1024, le=65536)
 
 
+class Schedule(StrictModel):
+    start_hour_utc: int = Field(default=21, ge=0, le=23)
+    window_hours: int = Field(default=6, ge=1, le=24)
+
+
 class Config(StrictModel):
     measurement: Measurement = Field(default_factory=Measurement)
     gates: Gates = Field(default_factory=Gates)
@@ -59,6 +64,7 @@ class Config(StrictModel):
     budget: Budget = Field(default_factory=Budget)
     timeouts: Timeouts = Field(default_factory=Timeouts)
     llm: LLMConfig = Field(default_factory=LLMConfig)
+    schedule: Schedule = Field(default_factory=Schedule)
     data_dir: str = "data"
 
 

@@ -33,6 +33,25 @@ def health(point):
 
 
 def dispatch(point, verb, payload):
+    if point == "gateway" and verb in {"apply_strategy", "recheck"}:
+        from harness.node_runtime import apply, recheck
+
+        return apply(payload) if verb == "apply_strategy" else recheck(payload)
+    if point == "gateway" and verb in {
+        "get_config",
+        "service_status",
+        "watchdog",
+        "restore_backup",
+    }:
+        StrictModel.model_validate(payload)
+        from harness.node_runtime import engine
+        from harness.node_service import live_strategy, service_status
+
+        if verb == "get_config":
+            return {"strategy": live_strategy(), "deployment": engine().state()}
+        if verb == "service_status":
+            return {"running": service_status()}
+        return engine().watchdog() if verb == "watchdog" else engine().rollback()
     if verb == "probe":
         from harness.probe import ProbeRequest, probe
 
@@ -54,6 +73,10 @@ def dispatch(point, verb, payload):
 
 
 def serve(point):
+    if point == "gateway":
+        from harness.node_runtime import startup
+
+        startup()
     token = Path("/auth/token").read_text().strip()
 
     class Handler(BaseHTTPRequestHandler):
@@ -71,7 +94,7 @@ def serve(point):
                 self.connection.settimeout(5)
                 result = dispatch(point, self.path.lstrip("/"), json.loads(self.rfile.read(length)))
                 body, status = json.dumps(result).encode(), 200
-            except (ValueError, OSError, subprocess.SubprocessError):
+            except (ValueError, OSError, RuntimeError, subprocess.SubprocessError):
                 body, status = b'{"error":"operation refused or unavailable"}', 400
             self.send_response(status)
             self.send_header("Content-Type", "application/json")

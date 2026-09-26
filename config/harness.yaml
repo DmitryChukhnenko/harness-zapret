@@ -22,3 +22,6 @@ llm:
   max_tokens: 1024
   max_summary_bytes: 16384
 data_dir: data
+schedule:
+  start_hour_utc: 21
+  window_hours: 6

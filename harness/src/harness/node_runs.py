@@ -100,7 +100,17 @@ def dispatch(verb, payload):
     if verb == "run_status":
         path = directory / "status.json"
         return json.loads(path.read_text()) if path.exists() else {"status": "starting"}
+
+    def read(name):
+        path = directory / name
+        return path.read_text(encoding="utf-8") if path.exists() else ""
+
+    status = json.loads((directory / "status.json").read_text())
+    if status["status"] == "running":
+        raise ValueError("run is still active")
     return {
-        "log": (directory / "raw.log").read_text(encoding="utf-8"),
-        "events": (directory / "events.jsonl").read_text(encoding="utf-8"),
+        "log": read("raw.log"),
+        "events": read("events.jsonl"),
+        "recheck": read("recheck.jsonl"),
+        **status,
     }

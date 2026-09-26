@@ -4,7 +4,7 @@
 Phases 0–1 committed; Compose config and upstream instrumentation validated.
 
 ## Current phase
-Phases 5–8 in progress: probes and Mistral provider implemented; recheck and summaries next.
+Phases 5–11 implemented; integration hardening and acceptance/finalization next.
 
 ## Completed
 - Read the attached implementation brief and authoritative SPEC.md.
@@ -25,10 +25,17 @@ Phases 5–8 in progress: probes and Mistral provider implemented; recheck and s
 - Index-only selection, abstain, one schema retry, local validation, usage accounting.
 - LLM credentials only MISTRAL_API_KEY; no configurable endpoint or credential field.
 - 40 offline tests pass, including 20 Mistral/schema/error-path cases.
+- Dual-point selective recheck with expiring exclusions and corpus-only candidates.
+- Invariants, compact summaries and deterministic module budget calculations.
+- Five LLM lanes: selection, annotation, patch draft, prioritized loss reason and bounded grid draft.
+- Gateway-local deployment transaction, service validation, backup/rollback and watchdog thread.
+- CLI stages, UTC sweep window, fresh ingestion before LLM, reports and reconciliation.
+- 51 tests pass, including deployment refusal and immediate rollback branches; ruff passes.
 
 ## Remaining
-- Phases 5–13: client probes, recheck, invariants, LLM, deployment, watchdog,
-  reports, acceptance and full operational CLI.
+- Phase 12: acceptance case mapping and reports, live checks with honest environment skips.
+- Phase 13: operational hardening, README, requirements traceability and final verification.
+- Verify shared DNS and transit topology; strengthen interrupted-run and recheck rebuild handling.
 
 ## Known issues
 - Docker Desktop Linux daemon unavailable, including outside the sandbox.
