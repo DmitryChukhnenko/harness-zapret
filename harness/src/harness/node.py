@@ -33,6 +33,10 @@ def health(point):
 
 
 def dispatch(point, verb, payload):
+    if point == "gateway" and verb in {"run_blockcheck", "run_status", "run_result"}:
+        from harness.node_runs import dispatch as dispatch_run
+
+        return dispatch_run(verb, payload)
     if verb == "health":
         StrictModel.model_validate(payload)
         return health(point)
