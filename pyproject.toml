@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zapret-harness"
+version = "0.1.0"
+description = "Deterministic Zapret2 measurement harness with constrained Mistral advice"
+requires-python = ">=3.12"
+dependencies = ["httpx==0.28.1", "pydantic==2.13.4", "PyYAML==6.0.3"]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "ruff==0.16.9"]
+
+[project.scripts]
+harness = "harness.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["harness/src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["harness/src"]
+testpaths = ["tests"]
+markers = ["live: requires an explicitly enabled running Linux Docker lab"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

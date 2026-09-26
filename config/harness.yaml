@@ -1,0 +1,24 @@
+measurement:
+  min_distinct_addresses: 2
+  attempts_per_domain: 2
+gates:
+  min_runs: 2
+  min_dates: 2
+watchdog:
+  consecutive_failures_before_rollback: 2
+  repair_wait_seconds: 600
+  observation_seconds: 7200
+  tick_seconds: 30
+budget:
+  zero_win_elimination_threshold: 1000
+  module_reenable_days: 14
+timeouts:
+  control_seconds: 2
+  exit_probe_seconds: 5
+llm:
+  provider: mistral
+  model: mistral-small-latest
+  timeout_seconds: 30
+  max_tokens: 1024
+  max_summary_bytes: 16384
+data_dir: data
