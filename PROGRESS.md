@@ -1,19 +1,22 @@
 # Current state
 
 ## Last completed phase
-Repository inspected; supplied SPEC.md read in full.
+Phase 0 — bootstrap committed; configuration tests passed (2/2).
 
 ## Current phase
-Phase 0 — bootstrap.
+Phase 1 — pinned Zapret2 container and finite control interface implemented.
 
 ## Completed
 - Read the attached implementation brief and authoritative SPEC.md.
 - Confirmed production provider: Mistral, mistral-small-latest,
   https://api.mistral.ai/v1/chat/completions, JSON Schema structured outputs.
 - Created local Python environment and installed development dependencies.
+- Compose validates; instrumenter anchors verified against pinned upstream source.
+- Isolated management/lab networks, explicit client default route and gateway NAT.
+- Authenticated finite control API, node health checks, CLI doctor.
 
 ## Remaining
-- Phases 1–13 from the implementation brief: measurement node, facts, gates,
+- Phases 2–13 from the implementation brief: raw runs, facts, gates,
   client, recheck, invariants, LLM, deployment, watchdog, reports, acceptance.
 
 ## Known issues
