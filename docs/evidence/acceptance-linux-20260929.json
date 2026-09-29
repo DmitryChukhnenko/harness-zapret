@@ -1,0 +1,129 @@
+{
+  "run_id": "acceptance-20260929T071253Z",
+  "timestamp": "2026-09-29T07:12:54.794363+00:00",
+  "status": "PASS_SIMULATED",
+  "tests": 69,
+  "passed": 69,
+  "cases": [
+    {
+      "id": "П-1",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_idempotency_and_conflict_transaction"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-2",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_dates_are_not_runs"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-3",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_missing_recheck_and_loud_delivery"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-4",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_completed_probe_and_tail",
+        "test_argument_roundtrip"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-5",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_watchdog_all_branches",
+        "test_deploy_backup_restore",
+        "test_start_failure_immediate_rollback"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-6",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_overlap_rejected_then_released"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-7",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_client_unavailable",
+        "test_watchdog_all_branches"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-8",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_harm_and_unknown"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-9",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_retry_exact_invalid_response_once",
+        "test_abstain",
+        "test_invalid_twice_stops",
+        "test_annotation_and_abstention",
+        "test_patch_is_exact_draft_and_refuses_hallucination",
+        "test_loss_priority_and_unknown_abstain",
+        "test_grid_hallucinations_and_duplicates_rejected"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-10",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_missing_recheck_and_loud_delivery",
+        "test_successful_report_sink"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-11",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_reconcile_both_nodes"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    },
+    {
+      "id": "П-12",
+      "status": "PASS_SIMULATED",
+      "tests": [
+        "test_each_deployment_refusal"
+      ],
+      "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+      "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md"
+    }
+  ],
+  "external_delivery": "NOT_CONFIGURED"
+}

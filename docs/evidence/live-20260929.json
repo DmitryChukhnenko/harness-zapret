@@ -1,0 +1,770 @@
+{
+  "date": "2026-09-29",
+  "environment": "Docker Desktop Linux engine 29.8.0; Windows host",
+  "doctor": {
+    "config": "PASS",
+    "domains": 2,
+    "llm_provider": "mistral",
+    "llm_model": "mistral-small-latest",
+    "llm_key_present": false,
+    "data_writable": true,
+    "gateway": {
+      "point": "gateway",
+      "available": true,
+      "firewall": true,
+      "revision": "00f5aaa36de500971faf6db440dd7d8b25672281",
+      "nfqws": true,
+      "blockcheck": true
+    },
+    "client": {
+      "point": "client",
+      "route": [
+        {
+          "dst": "default",
+          "gateway": "172.31.0.2",
+          "dev": "eth0",
+          "flags": []
+        }
+      ],
+      "available": true
+    },
+    "topology": "PASS",
+    "path_probe": {
+      "status": "PASS",
+      "forwarded_packets": 34,
+      "probe_verdict": "OPEN"
+    }
+  },
+  "control": {
+    "timestamp": "2026-09-29T07:07:06.861753+00:00",
+    "status": "PASS_LIVE",
+    "initial": {
+      "status": "PASS",
+      "expected": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "live": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "client": {
+        "point": "client",
+        "route": [
+          {
+            "dst": "default",
+            "gateway": "172.31.0.2",
+            "dev": "eth0",
+            "flags": []
+          }
+        ],
+        "available": true
+      }
+    },
+    "strategy_drift": {
+      "status": "DRIFT",
+      "expected": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "live": {
+        "strategy": "--payload=tls_client_hello",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "client": {
+        "point": "client",
+        "route": [
+          {
+            "dst": "default",
+            "gateway": "172.31.0.2",
+            "dev": "eth0",
+            "flags": []
+          }
+        ],
+        "available": true
+      }
+    },
+    "client_route_drift": {
+      "status": "DRIFT",
+      "expected": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "live": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "client": {
+        "point": "client",
+        "route": [
+          {
+            "dst": "default",
+            "gateway": "172.31.0.254",
+            "dev": "eth0",
+            "flags": []
+          }
+        ],
+        "available": true
+      }
+    },
+    "gateway_stopped_client_cannot_bypass": {
+      "curl_exit": 28
+    },
+    "lifecycle_with_harness_stopped": "/state/live/lifecycle/d603f8a6-ba0f-4c76-93d5-790edb786416",
+    "restored": {
+      "status": "PASS",
+      "expected": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "live": {
+        "strategy": "",
+        "deployment": {
+          "status": "idle"
+        }
+      },
+      "client": {
+        "point": "client",
+        "route": [
+          {
+            "dst": "default",
+            "gateway": "172.31.0.2",
+            "dev": "eth0",
+            "flags": []
+          }
+        ],
+        "available": true
+      }
+    }
+  },
+  "diagnostics": {
+    "blockcheck": {
+      "result": {
+        "timestamp": "2026-09-29T07:02:21.480822+00:00",
+        "kind": "bounded_live_smoke_not_admission_evidence",
+        "status": "PASS_LIVE",
+        "run_id": "4acb3d59-2684-4ac1-a046-162a36e52e48",
+        "exit_code": 0,
+        "facts": 3,
+        "discarded_tail": 0,
+        "argument_roundtrip": true,
+        "sent": [
+          "--payload=tls_client_hello --lua-desync=multisplit:pos=1",
+          "--out-range=s1<d1 --payload=tls_client_hello --lua-desync=multisplit:pos=1"
+        ],
+        "observed": [
+          "--payload=tls_client_hello --lua-desync=multisplit:pos=1",
+          "'--out-range=s1<d1' --payload=tls_client_hello --lua-desync=multisplit:pos=1"
+        ],
+        "path": "/state/live/blockcheck/4acb3d59-2684-4ac1-a046-162a36e52e48"
+      },
+      "archive": "data/reports/live/blockcheck/4acb3d59-2684-4ac1-a046-162a36e52e48",
+      "sha256": {
+        "events.jsonl": "1027bb143973c668afefe8913c6064296efedb8b3aaee032514f9828f88a3e9b",
+        "facts.jsonl": "0ed2bcb31daaa79296aee887aaabae8eecfab7fadb14f9b1e96b88991b7a2601",
+        "raw.log": "b804bd737f3b04c4617d8179b1675d43a2e26f0dd1d7ee2278b0d9424a955b8f",
+        "result.json": "eb663126013049dd1c52bd69ac33b367c9a4d77ad48a1cfed890c6d471911042"
+      },
+      "previous_runs": [
+        {
+          "run": "dce71053-4723-4bf7-be7d-8e664a9589eb",
+          "status": "FAIL"
+        }
+      ]
+    },
+    "lifecycle": {
+      "result": {
+        "timestamp": "2026-09-29T07:07:23.865664+00:00",
+        "status": "PASS_LIVE",
+        "scope": "real service/network; fixture admission, isolated state, shortened windows",
+        "events": [
+          {
+            "at": 1790665646.3287094,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665648.95757,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665649.313874,
+            "name": "apply",
+            "value": {
+              "status": "observing",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665648.961841,
+              "repair_deadline": 1790665653.961841,
+              "deadline": 1790665708.961841,
+              "repair": [],
+              "guard": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "repaired": [],
+              "failures": {},
+              "last_tick": null,
+              "unmeasured": []
+            }
+          },
+          {
+            "at": 1790665649.317948,
+            "name": "nfqueue_registered",
+            "value": "  200     45     0 2 65531     0     0        0  1\n"
+          },
+          {
+            "at": 1790665651.6037247,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665651.6121953,
+            "name": "overlap_rejected",
+            "value": true
+          },
+          {
+            "at": 1790665653.918848,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665653.9282804,
+            "name": "lock_released",
+            "value": true
+          },
+          {
+            "at": 1790665655.1384156,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "UNMEASURED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              }
+            }
+          },
+          {
+            "at": 1790665655.1465085,
+            "name": "client_unavailable_no_rollback",
+            "value": {
+              "status": "observing",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665648.961841,
+              "repair_deadline": 1790665653.961841,
+              "deadline": 1790665708.961841,
+              "repair": [],
+              "guard": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "repaired": [],
+              "failures": {
+                "gateway:example.com": 0,
+                "client:example.com": 0
+              },
+              "last_tick": 1790665655.142506,
+              "unmeasured": [
+                "client:example.com"
+              ]
+            }
+          },
+          {
+            "at": 1790665657.462885,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665657.542799,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              },
+              "client:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              }
+            }
+          },
+          {
+            "at": 1790665657.5507035,
+            "name": "single_failed_tick_no_rollback",
+            "value": {
+              "status": "observing",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665648.961841,
+              "repair_deadline": 1790665653.961841,
+              "deadline": 1790665708.961841,
+              "repair": [],
+              "guard": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "repaired": [],
+              "failures": {
+                "gateway:example.com": 1,
+                "client:example.com": 1
+              },
+              "last_tick": 1790665657.5466776,
+              "unmeasured": []
+            }
+          },
+          {
+            "at": 1790665657.6024806,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              },
+              "client:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              }
+            }
+          },
+          {
+            "at": 1790665657.9470017,
+            "name": "guard_rollback_service_restored",
+            "value": {
+              "status": "rolled_back",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665648.961841,
+              "repair_deadline": 1790665653.961841,
+              "deadline": 1790665708.961841,
+              "repair": [],
+              "guard": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "repaired": [],
+              "failures": {
+                "gateway:example.com": 2,
+                "client:example.com": 1
+              },
+              "last_tick": 1790665657.6066668,
+              "unmeasured": [],
+              "rollback_reason": "guard_failed",
+              "rollback_time": 1790665657.941757
+            }
+          },
+          {
+            "at": 1790665660.279733,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665660.6900365,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              },
+              "client:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              }
+            }
+          },
+          {
+            "at": 1790665661.0939612,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              },
+              "client:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              }
+            }
+          },
+          {
+            "at": 1790665661.103736,
+            "name": "repair_wait_not_expired",
+            "value": {
+              "status": "observing",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665660.6957853,
+              "repair_deadline": 1790665665.6957853,
+              "deadline": 1790665720.6957853,
+              "repair": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "guard": [],
+              "repaired": [],
+              "failures": {
+                "gateway:example.com": 1,
+                "client:example.com": 1
+              },
+              "last_tick": 1790665661.0998213,
+              "unmeasured": []
+            }
+          },
+          {
+            "at": 1790665665.7595613,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              },
+              "client:example.com": {
+                "verdict": "BLOCKED_OR_FAILED",
+                "success_count": 0,
+                "attempt_count": 2,
+                "frontend_addresses": []
+              }
+            }
+          },
+          {
+            "at": 1790665666.09841,
+            "name": "repair_timeout_rollback",
+            "value": {
+              "status": "rolled_back",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665660.6957853,
+              "repair_deadline": 1790665665.6957853,
+              "deadline": 1790665720.6957853,
+              "repair": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "guard": [],
+              "repaired": [],
+              "failures": {
+                "gateway:example.com": 2,
+                "client:example.com": 1
+              },
+              "last_tick": 1790665665.7640185,
+              "unmeasured": [],
+              "rollback_reason": "repair_failed",
+              "rollback_time": 1790665666.0929863
+            }
+          },
+          {
+            "at": 1790665668.8368604,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665673.2995918,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665673.3084486,
+            "name": "observation_closed",
+            "value": {
+              "status": "accepted",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--filter-tcp=443 --payload=tls_client_hello --lua-desync=multisplit:pos=1",
+              "started": 1790665668.8423274,
+              "repair_deadline": 1790665669.8423274,
+              "deadline": 1790665670.8423274,
+              "repair": [],
+              "guard": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "repaired": [],
+              "failures": {
+                "gateway:example.com": 0,
+                "client:example.com": 0
+              },
+              "last_tick": 1790665673.3044467,
+              "unmeasured": []
+            }
+          },
+          {
+            "at": 1790665675.9209805,
+            "name": "measurement",
+            "value": {
+              "gateway:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              },
+              "client:example.com": {
+                "verdict": "OPEN",
+                "success_count": 2,
+                "attempt_count": 2,
+                "frontend_addresses": [
+                  "104.20.23.154"
+                ]
+              }
+            }
+          },
+          {
+            "at": 1790665676.6248412,
+            "name": "immediate_start_failure_rollback",
+            "value": {
+              "status": "rolled_back",
+              "old": "--filter-tcp=443 --payload=tls_client_hello",
+              "new": "--invalid-diagnostic-option=1",
+              "started": 1790665675.9266932,
+              "repair_deadline": 1790665680.9266932,
+              "deadline": 1790665735.9266932,
+              "repair": [],
+              "guard": [
+                "gateway:example.com",
+                "client:example.com"
+              ],
+              "repaired": [],
+              "failures": {},
+              "last_tick": null,
+              "unmeasured": [],
+              "rollback_reason": "service_start_failed",
+              "rollback_time": 1790665676.62029
+            }
+          },
+          {
+            "at": 1790665676.9647346,
+            "name": "already_installed_refused",
+            "value": true
+          },
+          {
+            "at": 1790665677.3047478,
+            "name": "watchdog_not_scheduled_refused",
+            "value": true
+          },
+          {
+            "at": 1790665677.6453369,
+            "name": "unsafe_strategy_refused",
+            "value": true
+          },
+          {
+            "at": 1790665677.6509628,
+            "name": "busy_operation_refused",
+            "value": true
+          }
+        ],
+        "path": "/state/live/lifecycle/d603f8a6-ba0f-4c76-93d5-790edb786416",
+        "restored_empty_live_strategy": true
+      },
+      "archive": "data/reports/live/lifecycle/d603f8a6-ba0f-4c76-93d5-790edb786416",
+      "sha256": {
+        "result.json": "8cc9a476d4c4662f5a548338c5f71b310e874e6fa80cc0b0da0c95532f2ed065"
+      },
+      "previous_runs": [
+        {
+          "run": "d936e3e6-82a0-4174-9ea6-2e0c4429b43b",
+          "status": "PASS_LIVE"
+        }
+      ]
+    },
+    "recheck": {
+      "result": {
+        "timestamp": "2026-09-29T07:04:55.873285+00:00",
+        "status": "PASS_LIVE",
+        "scope": "live candidate probes; separate diagnostic archive, no admission bypass",
+        "path": "/state/live/recheck/1f31f11c-3b72-4af1-8bc2-6db997612c9a",
+        "facts": 4,
+        "points": [
+          "client",
+          "gateway"
+        ],
+        "all_open_multiple_addresses": true,
+        "lease_restored_without_active_restart": true
+      },
+      "archive": "data/reports/live/recheck/1f31f11c-3b72-4af1-8bc2-6db997612c9a",
+      "sha256": {
+        "facts.jsonl": "ce104ac5c8b1dcdd5370abbd8066a5a388b30ffc22dc7078cc8ec291721b4ab1",
+        "result.json": "4b4f91131ade6fa511581341800c4fa542990460c79eb12b3b6803be5e3eead5"
+      },
+      "previous_runs": []
+    }
+  },
+  "scope": "Controlled lab diagnostics; no real two-date admission or paid Mistral call."
+}

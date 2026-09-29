@@ -60,8 +60,8 @@ def acceptance(root):
             "id": name,
             "status": "PASS_SIMULATED" if all(results.get(t, False) for t in tests) else "FAIL",
             "tests": tests,
-            "live_status": "SKIPPED_ENVIRONMENT",
-            "live_reason": "Requires an enabled Linux lab; see docs/LIVE-VERIFICATION.md",
+            "live_status": "NOT_RUN_BY_OFFLINE_SUITE",
+            "live_reason": "Separate measured evidence: see docs/LIVE-VERIFICATION.md",
         }
         for name, tests in CASES.items()
     ]
