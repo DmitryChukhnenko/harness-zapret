@@ -159,6 +159,7 @@ class LLMResult:
     usage: dict[str, int] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
     cost: float | None = None  # Provider supplies tokens, not billed monetary cost.
+    response_models: list[str] = field(default_factory=list)
 
     def as_dict(self):
         return {
@@ -169,6 +170,7 @@ class LLMResult:
             "errors": self.errors,
             "cost": self.cost,
             "cost_status": "not_returned_by_provider",
+            "response_models": self.response_models,
         }
 
 
@@ -200,6 +202,8 @@ def structured_call(provider, input_model, output_type, instruction, config=None
             return result
         for name, value in completion.usage.items():
             result.usage[name] = result.usage.get(name, 0) + value
+        if completion.model and completion.model not in result.response_models:
+            result.response_models.append(completion.model)
         try:
             result.response = output_type.model_validate_json(completion.text)
             result.status = "ok"

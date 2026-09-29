@@ -3,15 +3,20 @@
 from copy import deepcopy
 
 
-def make_state(old, new, baselines, now, config):
+def make_state(old, new, baselines, now, config, repair_domains=None):
+    if not baselines:
+        raise ValueError("baseline is empty")
     repair, guard = [], []
     for key, outcome in baselines.items():
-        if outcome["verdict"] == "OPEN":
+        if outcome["verdict"] in {"UNMEASURED", "ADDRESS_NOT_SERVING_HOST"}:
+            raise ValueError("baseline incomplete; deployment cannot infer unmeasured state")
+        if outcome["success_count"] > 0:
             guard.append(key)
         elif outcome["verdict"] == "BLOCKED_OR_FAILED":
-            repair.append(key)
+            if repair_domains is None or key.split(":", 1)[1] in repair_domains:
+                repair.append(key)
         else:
-            raise ValueError("baseline incomplete; deployment cannot infer unmeasured state")
+            raise ValueError("inconsistent baseline verdict")
     return {
         "status": "observing",
         "old": old,

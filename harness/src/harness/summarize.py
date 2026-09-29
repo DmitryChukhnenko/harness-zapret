@@ -25,6 +25,14 @@ def summarize(run_id, facts, gates, invariants, min_addresses=2):
         "schema_version": 1,
         "run_id": run_id,
         "fact_count": len(current),
+        "domains": sorted({f.domain for f in current}),
+        "strategy_count": len({f.strategy for f in current if f.record_type == "probe"}),
+        "measurement_points": {
+            point: "MEASURED"
+            if any(f.measurement_point == point and f.verdict != "UNMEASURED" for f in current)
+            else "UNMEASURED"
+            for point in ("gateway", "client")
+        },
         "clean_wins": sum(clean_win(f, min_addresses)[0] for f in current),
         "missing_addresses": missing_addresses,
         "warnings": ["No addresses recorded: clean wins structurally zero for these probes"]

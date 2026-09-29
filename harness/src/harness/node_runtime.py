@@ -10,7 +10,14 @@ from harness.gates import evaluate_gates
 from harness.locking import BusyError, lock
 from harness.models import Fact
 from harness.node_runs import RunRef
-from harness.node_service import live_strategy, service_status, set_exclusions, start, stop
+from harness.node_service import (
+    candidate_status,
+    live_strategy,
+    service_status,
+    set_exclusions,
+    start,
+    stop,
+)
 from harness.parser import parse_events
 from harness.probe import ProbeRequest, probe, remote_probe
 from harness.recheck import measure_candidate, missing_rechecks
@@ -71,7 +78,14 @@ class ApplyRequest(RunRef):
 def apply(payload):
     request = ApplyRequest.model_validate(payload)
     validate_strategy(request.strategy)
-    return engine().apply(request.strategy, eligible=lambda: is_eligible(request))
+    classes = load_domains().classes
+    if request.class_name not in classes:
+        raise ValueError("unknown deployment class")
+    return engine().apply(
+        request.strategy,
+        eligible=lambda: is_eligible(request),
+        repair_domains=classes[request.class_name],
+    )
 
 
 def is_eligible(request):
@@ -199,6 +213,15 @@ def recheck_worker(request):
                     measured = measure_candidate(
                         request.run_id, strategy, domains, client_control(), config, len(facts)
                     )
+                    lease_path = ROOT / "recheck-lease.json"
+                    if (
+                        not candidate_status()
+                        or not lease_path.exists()
+                        or (json.loads(lease_path.read_text())["expires"] <= time.time())
+                    ):
+                        raise ValueError(
+                            "candidate process or recheck lease expired during measurement"
+                        )
                     facts.extend(measured)
                     (directory / "recheck.jsonl").write_text(
                         "".join(fact_json(f) + "\n" for f in facts)

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: zapret/Dockerfile
     cap_drop: [ALL]
-    cap_add: [NET_ADMIN, NET_RAW, NET_BIND_SERVICE, SETUID, SETGID]
+    cap_add: [NET_ADMIN, NET_RAW, NET_BIND_SERVICE, SETUID, SETGID, KILL]
     dns: [127.0.0.1]
     sysctls:
       net.ipv4.ip_forward: "1"
@@ -17,7 +17,8 @@ services:
         ipv4_address: 172.30.0.2
       lab_net:
         ipv4_address: 172.31.0.2
-      uplink: {}
+      uplink:
+        gw_priority: 1
     healthcheck:
       test: [CMD, python, -m, harness.node, healthcheck]
       interval: 15s
@@ -55,7 +56,8 @@ services:
     networks:
       management:
         ipv4_address: 172.30.0.3
-      uplink: {}
+      uplink:
+        gw_priority: 1
     depends_on:
       zapret:
         condition: service_healthy
@@ -68,7 +70,11 @@ networks:
       config:
         - subnet: 172.30.0.0/24
   lab_net:
-    internal: true
+    # Docker's internal bridge filter drops transit packets before the peer router.
+    # No host gateway address or host masquerade: Zapret is the only IPv4 exit.
+    driver_opts:
+      com.docker.network.bridge.inhibit_ipv4: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "false"
     ipam:
       config:
         - subnet: 172.31.0.0/24

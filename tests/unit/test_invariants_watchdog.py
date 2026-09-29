@@ -50,3 +50,21 @@ def test_overlap_rejected_then_released(tmp_path):
                 pytest.fail("overlapping tick entered")
     with lock(path):
         pass
+
+
+def test_repair_scope_preserves_all_other_guards():
+    baseline = {
+        "gateway:target.example": status("BLOCKED_OR_FAILED"),
+        "client:target.example": status("BLOCKED_OR_FAILED"),
+        "gateway:unrelated-broken.example": status("BLOCKED_OR_FAILED"),
+        "client:unrelated-open.example": status("OPEN", 2),
+        "gateway:transient.example": status("BLOCKED_OR_FAILED", 1),
+    }
+    state = make_state("old", "new", baseline, 0, Config(), ["target.example"])
+    assert state["repair"] == ["gateway:target.example", "client:target.example"]
+    assert state["guard"] == ["client:unrelated-open.example", "gateway:transient.example"]
+
+
+def test_empty_baseline_is_rejected():
+    with pytest.raises(ValueError, match="empty"):
+        make_state("old", "new", {}, 0, Config())

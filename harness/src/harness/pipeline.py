@@ -92,13 +92,16 @@ def analyze(config, run_id):
     return summary
 
 
-def llm(config, run_id):
-    summary = analyze(config, run_id)
+def llm(config, run_id, *, summary=None):
+    if summary is None:
+        summary = analyze(config, run_id)
     result = select_candidate(
         SelectionSummary.model_validate(summary["llm_input"]), make_provider(config.llm), config.llm
     )
     output = {
         "run_id": run_id,
+        "provider": config.llm.provider,
+        "model": config.llm.model,
         **result.as_dict(),
         "eligible_candidates": [g for g in summary["gates"] if g["eligible"]],
     }
@@ -173,9 +176,10 @@ def pipeline(config, existing_run=None):
     store = Storage(config.data_dir)
     run_id = existing_run or run_sweep(config)
     try:
-        summary = analyze(config, run_id)
+        analyze(config, run_id)
         rechecks = recheck(config, run_id)
-        decision = llm(config, run_id)
+        summary = analyze(config, run_id)
+        decision = llm(config, run_id, summary=summary)
         payload = {
             "timestamp": datetime.now(UTC).isoformat(),
             "summary": summary,

@@ -79,6 +79,11 @@ def service_status():
     return not live_strategy() or (process is not None and process.poll() is None)
 
 
+def candidate_status():
+    process = PROCESSES.get("candidate")
+    return process is not None and process.poll() is None
+
+
 def set_exclusions(domains):
     path = ROOT / "recheck-hosts.txt"
     temp = path.with_suffix(".tmp")

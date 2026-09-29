@@ -32,7 +32,7 @@ class Deployment:
     def write_strategy(self, strategy):
         write_text(self.root / "strategy.conf", strategy + "\n")
 
-    def apply(self, strategy, *, eligible, now=None):
+    def apply(self, strategy, *, eligible, now=None, repair_domains=None):
         validate_strategy(strategy)  # Validate before locks and state mutations.
         if not callable(eligible) and not eligible:
             raise ValueError("candidate did not pass deterministic gates")
@@ -47,7 +47,14 @@ class Deployment:
                 raise ValueError("previous deployment still active")
             baselines = self.measure()  # Includes all configured branches and both points.
             old = self.read()
-            state = make_state(old, strategy, baselines, now or time.time(), self.config)
+            state = make_state(
+                old,
+                strategy,
+                baselines,
+                time.time() if now is None else now,
+                self.config,
+                repair_domains,
+            )
             write_text(self.root / "backup.conf", old + "\n")
             state["status"] = "prepared"
             write_json(self.root / "deployment.json", state)
@@ -91,7 +98,9 @@ class Deployment:
                 return state
             if not self.service():
                 return self._rollback(state, "service_died")
-            state, reason = tick(state, self.measure(), now or time.time(), self.config)
+            state, reason = tick(
+                state, self.measure(), time.time() if now is None else now, self.config
+            )
             if state["status"] == "rollback_required":
                 return self._rollback(state, reason)
             write_json(self.root / "deployment.json", state)

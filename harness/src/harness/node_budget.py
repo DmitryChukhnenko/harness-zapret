@@ -39,6 +39,8 @@ def prepare_modules(config):
     source_root = Path("/opt/zapret2/blockcheck2.d/standard")
     target = root / "standard"
     target.mkdir(parents=True, exist_ok=True)
+    for include in source_root.glob("*.inc"):
+        shutil.copyfile(include, target / include.name)
     for source in source_root.glob("*.sh"):
         observed_name = str(target / source.name)
         destination = target / source.name

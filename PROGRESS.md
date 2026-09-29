@@ -1,59 +1,49 @@
 # Current state
 
 ## Last completed phase
-Phases 0–1 committed; Compose config and upstream instrumentation validated.
+Phases 0–12 implemented and committed. Docker build and live topology verified on 2026-09-29.
 
 ## Current phase
-Phase 12 acceptance implemented; phase 13 documentation and final review in progress.
+Phase 13: live blockcheck/service checks, final documentation and acceptance evidence.
 
 ## Completed
-- Read the attached implementation brief and authoritative SPEC.md.
-- Confirmed production provider: Mistral, mistral-small-latest,
-  https://api.mistral.ai/v1/chat/completions, JSON Schema structured outputs.
-- Created local Python environment and installed development dependencies.
-- Compose validates; instrumenter anchors verified against pinned upstream source.
-- Isolated management/lab networks, explicit client default route and gateway NAT.
-- Authenticated finite control API, node health checks, CLI doctor.
-- Bounded async blockcheck runs; raw stdout and trusted events archived separately.
-- Typed facts, strict parser, interrupted-tail accounting, incremental/full ingestion.
-- SQLite idempotency key (run_id, timestamp, sequence), conflict detection and JSONL export.
-- Single clean-win definition, class gates with distinct run/date conditions.
-- 11 unit tests pass; ruff passes. Docker build attempted: daemon unavailable.
-- Gateway/client probes preserve Host/SNI for destination IP overrides; offline is UNMEASURED.
-- Corpus-derived strategy operation validation and deployment safety checks.
-- Provider protocol, MockProvider and official Mistral chat completions JSON Schema requests.
-- Index-only selection, abstain, one schema retry, local validation, usage accounting.
-- LLM credentials only MISTRAL_API_KEY; no configurable endpoint or credential field.
-- 40 offline tests pass, including 20 Mistral/schema/error-path cases.
-- Dual-point selective recheck with expiring exclusions and corpus-only candidates.
-- Invariants, compact summaries and deterministic module budget calculations.
-- Five LLM lanes: selection, annotation, patch draft, prioritized loss reason and bounded grid draft.
-- Gateway-local deployment transaction, service validation, backup/rollback and watchdog thread.
-- CLI stages, UTC sweep window, fresh ingestion before LLM, reports and reconciliation.
-- 51 tests pass, including deployment refusal and immediate rollback branches; ruff passes.
-- Acceptance command emits JSON/Markdown/JUnit evidence for all П-1…П-12.
-- Shared gateway DNS, explicit transit packet counter probe and bounded night window.
-- Run calendar date preserved across midnight; rebuild includes recheck archives.
-- Fresh node-side gates evaluated under the deployment lock; expiring recheck evidence.
-- Budget module filtering wired to blockcheck; re-enabled modules reset their observation sample.
-- Installed CLI verified; 62 tests pass and live topology test skips without enabled lab.
-- Real Mistral evaluation is a separate explicit `harness llm-eval --live` command.
+- Three-container Compose lab: harness, Zapret2 gateway, independent routed client.
+- Zapret2 pinned at 00f5aaa36de500971faf6db440dd7d8b25672281; instrumented trusted event sidecar.
+- Raw archives, typed SQLite facts, idempotent ingestion/rebuild, canonical clean wins and gates.
+- Dual-point probes/rechecks, expiring exclusion lease, deterministic invariants and module budget.
+- Production MistralProvider uses only MISTRAL_API_KEY, mistral-small-latest and official chat completions JSON Schema output.
+- Provider protocol, MockProvider, constrained index selection, schema retry, five typed LLM lanes and evaluations.
+- One-line deployment, durable backup, independent local watchdog, rollback, external reconciliation and reports.
+- CLI, tests for all acceptance criteria, generated requirements mapping and Russian setup guide.
+- 69 offline tests pass on Windows; one opt-in live test skipped there; ruff check passes.
+- Docker Desktop engine 29.8.0 started; all three images built and containers started.
+- Fixed missing libcap build dependency and Docker internal-bridge transit filtering.
+- Live doctor: nftables/nfqws2 available, client route through 172.31.0.2, 27 forwarded packets, OPEN probe.
+- Live topology test passed inside the harness container.
+- Fixed watchdog repair-domain scope and refreshed reports after rechecks.
 
 ## Remaining
-- Complete README, requirements mapping, live-verification guide and final verification.
-- Real Docker build and networking verification remain environment-dependent.
+- Complete bounded real blockcheck and lifecycle diagnostics; archive results.
+- Rebuild final images after fixes; run final unit/acceptance/live checks.
+- Update README, requirements/live guide and final checkpoint commit.
 
 ## Known issues
-- Docker Desktop Linux daemon unavailable, including outside the sandbox.
-  Live networking/build checks are not yet possible; no live pass is claimed.
+- No MISTRAL_API_KEY supplied: actual paid Mistral call has not been made.
+- External report sink is not configured; external delivery acceptance remains open.
+- No real two-date DPI qualification claimed. Simulated acceptance is labelled separately.
 
 ## Verification commands
-- `.venv/Scripts/python.exe -m pytest`
-- `.venv/Scripts/python.exe -m ruff check .`
-- `docker compose config --quiet`
+- `.venv/Scripts/python.exe -m pytest -q`
+- `.venv/Scripts/python.exe -m ruff check harness zapret tests tools`
+- `docker compose build`
+- `docker compose up -d`
+- `docker compose exec harness harness doctor`
+- `docker compose exec -e HARNESS_LIVE_TESTS=1 harness python -m pytest -m live -q`
+- `docker compose exec harness harness acceptance`
 
 ## Important architectural decisions
-- Separate harness, zapret and client containers; no privileged container.
-- API credentials only through MISTRAL_API_KEY; tests use MockProvider.
-- LLM receives a bounded typed summary and selects only an eligible index.
-- Local watchdog and backups must survive loss of the harness.
+- No privileged containers, Docker socket or arbitrary shell control API.
+- Management network is internal. Lab bridge has no host IPv4 gateway or masquerade;
+  explicit client route and Zapret NAT provide the sole exit. Uplink gets gateway priority.
+- LLM receives only bounded typed summaries and never determines admission or strategy text.
+- Local rollback state survives loss of the harness. Live diagnostic data is separate from admission history.

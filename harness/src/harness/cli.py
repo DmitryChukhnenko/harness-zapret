@@ -75,7 +75,11 @@ def main():
         "--initialize", action="store_true", help="initialize expected config snapshot"
     )
     args = parser.parse_args()
-    config = load_config(args.config)
+    try:
+        config = load_config(args.config)
+    except (ValueError, OSError):
+        print(json.dumps({"status": "ERROR", "message": "Invalid or unreadable configuration"}))
+        return 1
     if args.provider:
         config.llm.provider = args.provider
     from harness import pipeline as stages
